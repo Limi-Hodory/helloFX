@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<?import views.Player?>
+<?import views.Joystick?>
+<?import views.Graph?>
+<?import views.List?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+
+<?import javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.Controller">
+
+    <children>
+        <MenuBar BorderPane.alignment="CENTER" fx:id="menuBar" >
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" fx:id="csv1" onAction="#openFile" text="Open CSV (learn)" />
+                        <MenuItem mnemonicParsing="false" fx:id="csv2" onAction="#openFile" text="Open CSV (detection)" />
+                        <MenuItem mnemonicParsing="false" fx:id="algo" onAction="#openFile" text="Open Algorithm" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+
+     <Label text="alt" fx:id="alt" />
+     <Label text="airspeed" fx:id="airspeed" />
+      <Graph fx:id="graph"> </Graph>
+      <List fx:id="list"> </List>
+      <Joystick fx:id="joystick"> </Joystick>
+      <Player fx:id="player"> </Player>
+   </children>
+</AnchorPane>

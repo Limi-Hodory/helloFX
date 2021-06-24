@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="15.0.2" class="java.beans.XMLDecoder">
+    <object class="settings.UserSettings" id="UserSettings0">
+
+        <void property="altitudeField">
+            <void property="featureName">
+                <string>altimeter_indicated-altitude-ft</string>
+            </void>
+        </void>
+
+        <void property="speedField">
+            <void property="featureName">
+                <string>airspeed-indicator_indicated-speed-kt</string>
+            </void>
+        </void>
+
+        <void property="directionField">
+            <void property="featureName">
+                <string>indicated-heading-deg</string>
+            </void>
+        </void>
+
+        <void property="yawField">
+            <void property="featureName">
+                <string>side-slip-deg</string>
+            </void>
+        </void>
+
+        <void property="pitchField">
+            <void property="featureName">
+                <string>attitude-indicator_internal-pitch-deg</string>
+            </void>
+        </void>
+
+        <void property="rollField">
+            <void property="featureName">
+                <string>attitude-indicator_indicated-roll-deg</string>
+            </void>
+        </void>
+
+        <void property="throttleField">
+            <void property="featureName">
+                <string>throttle</string>
+            </void>
+            <void property="maxVal">
+                <float>1</float>
+
+            </void>
+            <void property="minVal">
+                <float>0</float>
+
+            </void>
+        </void>
+
+        <void property="rudderField">
+            <void property="featureName">
+                <string>rudder</string>
+            </void>
+            <void property="maxVal">
+                <float>1</float>
+
+            </void>
+            <void property="minVal">
+                <float>-1</float>
+
+            </void>
+        </void>
+
+        <void property="joystickXField">
+            <void property="featureName">
+                <string>aileron</string>
+            </void>
+        </void>
+
+        <void property="joystickYField">
+            <void property="featureName">
+                <string>elevator</string>
+            </void>
+        </void>
+
+        <void property="samplesPerSecond">
+            <int>10</int>
+        </void>
+
+    </object>
+</java>
