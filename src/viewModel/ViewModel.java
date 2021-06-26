@@ -1,5 +1,6 @@
 package viewModel;
 
+import anomalyDetection.StatLib;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -28,6 +29,8 @@ public class ViewModel extends Observable implements Observer {
 
     private StringProperty selectedFeature;
     private FloatProperty selectedFeatureValue;
+    private StringProperty selectedCorrelatedFeature;
+    private FloatProperty selectedCorrelatedFeatureValue;
 
     //private   File chosen;
 
@@ -38,11 +41,15 @@ public class ViewModel extends Observable implements Observer {
 
     public ViewModel(UserSettings settings) {
         timestep = new SimpleIntegerProperty(0);
-        m = new Model(timestep); //Equally the model should also know the timeSeries.
+        m = new Model(timestep, settings); //Equally the model should also know the timeSeries.
         m.addObserver(this);
         colsNames = FXCollections.observableArrayList();
+
         selectedFeature = new SimpleStringProperty("");
         selectedFeatureValue = new SimpleFloatProperty(0);
+        selectedCorrelatedFeature = new SimpleStringProperty("");
+        selectedCorrelatedFeatureValue = new SimpleFloatProperty(0);
+
         this.settings = settings;
         //We"ll add to the map only the variable that we want to show in the view
         displayVariables.put(settings.getAltitudeField().getFeatureName(), new SimpleDoubleProperty());
@@ -54,6 +61,7 @@ public class ViewModel extends Observable implements Observer {
         displayVariables.put(settings.getRudderField().getFeatureName(), new SimpleDoubleProperty());
         displayVariables.put(settings.getJoystickXField().getFeatureName(), new SimpleDoubleProperty());
         displayVariables.put(settings.getJoystickYField().getFeatureName(), new SimpleDoubleProperty());
+        displayVariables.put(settings.getRollField().getFeatureName(), new SimpleDoubleProperty());
 
 
         timestep.addListener((observer, oldV, newV) ->
@@ -67,12 +75,11 @@ public class ViewModel extends Observable implements Observer {
                     if (val != null) {
                         Platform.runLater(() -> {
                             displayVariables.get(s).set(vals.get(s));
-
-
                         });
                     }
                 }
-                // System.out.println("selected feature: " + selectedFeature);
+                selectedFeatureValue.set(vals.getOrDefault(selectedFeature.get(), 0f));
+                selectedCorrelatedFeatureValue.set(vals.getOrDefault(selectedCorrelatedFeature.get(), 0f));
 
                 selectedFeatureValue.set(vals.getOrDefault(selectedFeature.get(), 0f));
             }
@@ -84,7 +91,7 @@ public class ViewModel extends Observable implements Observer {
 
         openL = () -> m.openLearn();
         openD = () -> m.openDetect();
-        openA=()->m.openAlgo();
+        openA = ()-> m.openAlgo();
         play = () -> m.play(settings.getSamplesPerSecond());
         pause = () -> m.pause();
         stop = () -> m.stop();
@@ -112,8 +119,10 @@ public class ViewModel extends Observable implements Observer {
         return colsNames;
     }
 
-    public void selectFeature(String featureName) {
-        selectedFeature.setValue(featureName);
+    public void selectFeature(String featureName)
+    {
+        selectedFeature.set(featureName);
+        selectedCorrelatedFeature.set(StatLib.getMostCorrelatedFeatures(m.getTrainTimeSeries(), featureName).feature2);
     }
 
     public StringProperty getSelectedFeatureProperty() {
@@ -126,5 +135,18 @@ public class ViewModel extends Observable implements Observer {
 
     public IntegerProperty getTimestepProperty() {
         return timestep;
+    }
+
+    public StringProperty getSelectedCorrelatedFeatureProperty() {
+        return selectedCorrelatedFeature;
+    }
+
+    public FloatProperty getSelectedCorrelatedFeatureValueProperty() {
+        return selectedCorrelatedFeatureValue;
+    }
+
+    public float[] getTimeSeriesColUntil(String col, int timestep)
+    {
+        return m.getTimeSeriesColUntil(col, timestep);
     }
 }

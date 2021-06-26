@@ -1,55 +1,54 @@
 package views;
 
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.stage.FileChooser;
 import viewModel.ViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Controller implements Observer
-{
-    @FXML Player player;
-    @FXML Label alt;
-    @FXML Label airspeed;
-    @FXML Joystick joystick;
-    @FXML Graph graph;
-    @FXML List list;
-    @FXML MenuBar menuBar;
-    @FXML MenuItem csv1;
-    @FXML MenuItem csv2;
-    @FXML MenuItem algo;
+public class Controller implements Observer {
+    @FXML
+    Player player;
+    @FXML
+    Label alt;
+    @FXML
+    Label airspeed;
+    @FXML
+    Joystick joystick;
+    @FXML
+    Graph graph;
+    @FXML
+    List list;
+    @FXML
+    MenuBar menuBar;
+    @FXML Clocks clocks;
 
     private Runnable onOpenL, onOpenD, onOpenA;
 
     ViewModel vm;
 
-    public Controller()
-    {
+    public Controller() {
     }
-    
-    public void init(ViewModel vm)
 
-    {
+    public void init(ViewModel vm) {
         alt.textProperty().bind(vm.getProperty(vm.getSettings().getAltitudeField().getFeatureName()).asString()); //Wrap (connect) between alt in view to alt in view model
         //DODO bind to the all properties לעשות ככה לכל התכונות
 
-       // player.controller.onOpen= vm.open;
-        player.controller.onPlay= vm.play;
-        player.controller.onPause= vm.pause;
-        player.controller.onStop= vm.stop;
+        // player.controller.onOpen= vm.open;
+        player.controller.onPlay = vm.play;
+        player.controller.onPause = vm.pause;
+        player.controller.onStop = vm.stop;
 
         onOpenL = vm.openL;
-        onOpenD=vm.openD;
+        onOpenD = vm.openD;
+        onOpenA = vm.openA;
 
 
         joystick.controller.setViewModel(vm);
         list.controller.setViewModel(vm);
         graph.controller.setViewModel(vm);
+        clocks.controller.setViewModel(vm);
 
         vm.addObserver(list.controller);
         vm.addObserver(joystick.controller);
@@ -70,28 +69,31 @@ public class Controller implements Observer
         graph.setLayoutX(300);
         graph.setLayoutY(100);
 
+        clocks.setLayoutX(1100);
+        clocks.setLayoutY(400);
+
 
     }
 
-    public void openFile() {
-
-        if (csv1.idProperty().get().equals("csv1")) {
-            if (onOpenL != null)
-                onOpenL.run();
+        public void openFile1() {
+          if (onOpenL != null)
+              onOpenL.run();
         }
 
-        if (csv2.idProperty().get().equals("csv2")) {
-            if (onOpenD != null)
-                onOpenD.run();
-        }
-        if (algo.idProperty().get().equals("algo")) {
+
+
+        public void openFile2() {
+                if (onOpenD != null)
+                    onOpenD.run();
+            }
+
+       public void openFile3() {
             if (onOpenA != null)
                 onOpenA.run();
         }
 
 
 
-    }
 
     @Override
     public void update(Observable o, Object arg) {

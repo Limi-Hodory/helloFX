@@ -7,28 +7,28 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="803.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.GraphController">
    <children>
-      <LineChart layoutX="435.0" layoutY="36.0" prefHeight="278.0" prefWidth="312.0">
+      <LineChart fx:id="correlatedFeatureGraph" title="Correlated Feature" animated="false" layoutX="435.0" layoutY="36.0" prefHeight="278.0" prefWidth="312.0">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <NumberAxis label="Time" side="BOTTOM" autoRanging="false" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis label="Feature" side="LEFT" autoRanging="false" upperBound="1000" lowerBound="-100" />
         </yAxis>
       </LineChart>
       <LineChart layoutX="136.0" layoutY="363.0" prefHeight="272.0" prefWidth="394.0">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <NumberAxis side="BOTTOM" />
         </xAxis>
         <yAxis>
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <LineChart fx:id="featureLine" layoutX="37.0" layoutY="36.0" prefHeight="292.0" prefWidth="318.0">
+      <LineChart fx:id="featureGraph" title="Feature" layoutX="37.0" layoutY="36.0" prefHeight="292.0" prefWidth="318.0" animated="false">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <NumberAxis label="Time" side="BOTTOM" autoRanging="false" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis label="Feature" side="LEFT" autoRanging="false" upperBound="1000" lowerBound="-100" />
         </yAxis>
       </LineChart>
    </children>

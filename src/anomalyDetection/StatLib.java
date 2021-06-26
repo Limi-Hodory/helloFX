@@ -44,6 +44,27 @@ public class StatLib {
 		return (float)(cov(x, y) / (Math.sqrt(var(x))*Math.sqrt(var(y))));
 	}
 
+	public static CorrelatedFeatures getMostCorrelatedFeatures(TimeSeries ts, String feature)
+	{
+		String[] f = ts.getFeatures();
+		float maxCorrelation = 0;
+		String maxFeature = f[0];
+		for(int i = 0; i < f.length; i++)
+		{
+			if(!feature.equals(f[i]))
+			{
+				float correlation = StatLib.pearson(ts.valuesOf(feature), ts.valuesOf(f[i]));
+				if(Math.abs(correlation) > Math.abs(maxCorrelation))
+				{
+					maxCorrelation = correlation;
+					maxFeature = f[i];
+				}
+			}
+		}
+
+		return new CorrelatedFeatures(feature, maxFeature, maxCorrelation);
+	}
+
 	// performs a linear regression and returns the line equation
 	public static Line linear_reg(Point[] points) {
 		float[] x = new float[points.length];

@@ -82,5 +82,9 @@
             <int>10</int>
         </void>
 
+        <void property="anomalyDetectionAlgoFilePath">
+            <string>C:\Users\limor\IdeaProjects\helloFX\plugins</string>
+        </void>
+
     </object>
 </java>

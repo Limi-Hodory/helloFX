@@ -15,6 +15,7 @@
 <?import javafx.scene.control.MenuItem?>
 
 <?import javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
+<?import views.Clocks?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.Controller">
 
     <children>
@@ -22,9 +23,9 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" fx:id="csv1" onAction="#openFile" text="Open CSV (learn)" />
-                        <MenuItem mnemonicParsing="false" fx:id="csv2" onAction="#openFile" text="Open CSV (detection)" />
-                        <MenuItem mnemonicParsing="false" fx:id="algo" onAction="#openFile" text="Open Algorithm" />
+                        <MenuItem mnemonicParsing="false" fx:id="csv1" onAction="#openFile1" text="Open CSV (learn)" />
+                        <MenuItem mnemonicParsing="false" fx:id="csv2" onAction="#openFile2" text="Open CSV (detection)" />
+                        <MenuItem mnemonicParsing="false" fx:id="algo" onAction="#openFile3" text="Open Algorithm" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -46,5 +47,6 @@
       <List fx:id="list"> </List>
       <Joystick fx:id="joystick"> </Joystick>
       <Player fx:id="player"> </Player>
+        <Clocks fx:id="clocks"> </Clocks>
    </children>
 </AnchorPane>

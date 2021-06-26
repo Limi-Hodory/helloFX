@@ -66,7 +66,6 @@ public class JoyController implements Observer {
         sliderY.setMin(vm.getSettings().getThrottleField().getMinVal());
         sliderY.setMax(vm.getSettings().getThrottleField().getMaxVal());
         sliderY.setValue(0);
-//limi
 
     }
 }
