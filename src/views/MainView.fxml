@@ -16,14 +16,13 @@
 
 <?import javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
 <?import views.Clocks?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.Controller">
+<AnchorPane maxHeight="500" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.Controller">
 
     <children>
         <MenuBar BorderPane.alignment="CENTER" fx:id="menuBar" >
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" fx:id="csv1" onAction="#openFile1" text="Open CSV (learn)" />
                         <MenuItem mnemonicParsing="false" fx:id="csv2" onAction="#openFile2" text="Open CSV (detection)" />
                         <MenuItem mnemonicParsing="false" fx:id="algo" onAction="#openFile3" text="Open Algorithm" />
                     </items>

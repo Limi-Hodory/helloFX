@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import model.FlightConnector;
 import model.Model;
 import settings.UserSettings;
@@ -21,7 +23,7 @@ public class ViewModel extends Observable implements Observer {
     //In the model we"ll have reference to timeStep but its ok because is an integerProperty, *not* kind of view model
 
     private IntegerProperty timestep;
-    public final Runnable openL, openD,openA, play, pause, stop; //My methods
+    public final Runnable openD,openA, play, pause, stop,multiply1, multiply2; //My methods
     public Model m;
 
     private UserSettings settings;
@@ -39,7 +41,20 @@ public class ViewModel extends Observable implements Observer {
 
     private FlightConnector mFlightConnector = new FlightConnector();
 
-    public ViewModel(UserSettings settings) {
+    public ViewModel() 
+    {
+    	try 
+    	{
+    		settings = UserSettings.decodeXML();
+    	} catch(Exception e)
+    	{
+    		Alert a = new Alert(AlertType.ERROR);
+    		a.setHeaderText("Fatal Error: Missing Or Invalid Configuration File.");
+    		a.setContentText("Could not load configuration file.\n"
+    				+ "Please provide valid 'conf.xml' file in the same directory and restart the program.\n"
+    				+ "Program will not run correctly and may crash!");
+    		a.show();
+    	}
         timestep = new SimpleIntegerProperty(0);
         m = new Model(timestep, settings); //Equally the model should also know the timeSeries.
         m.addObserver(this);
@@ -50,7 +65,6 @@ public class ViewModel extends Observable implements Observer {
         selectedCorrelatedFeature = new SimpleStringProperty("");
         selectedCorrelatedFeatureValue = new SimpleFloatProperty(0);
 
-        this.settings = settings;
         //We"ll add to the map only the variable that we want to show in the view
         displayVariables.put(settings.getAltitudeField().getFeatureName(), new SimpleDoubleProperty());
         displayVariables.put(settings.getSpeedField().getFeatureName(), new SimpleDoubleProperty());
@@ -68,7 +82,7 @@ public class ViewModel extends Observable implements Observer {
         {    //This func will run every time that timeStep will change.
             // here we need to take the values from time Series and update.
 
-            Map<String, Float> vals = m.getTrainTimeSeries().row(newV.intValue());
+            Map<String, Float> vals = m.getTimeSeries().row(newV.intValue());
             if (vals != null) {
                 for (String s : displayVariables.keySet()) {
                     Float val = vals.get(s);
@@ -83,21 +97,27 @@ public class ViewModel extends Observable implements Observer {
 
                 selectedFeatureValue.set(vals.getOrDefault(selectedFeature.get(), 0f));
             }
-            String row = m.getTrainTimeSeries().getRow(newV.intValue());
-            System.out.println(newV.intValue() + row);
-            mFlightConnector.sendDataToFlight(row);
-
+            mFlightConnector.sendDataToFlight(mapToString(vals));
         });
 
-        openL = () -> m.openLearn();
         openD = () -> m.openDetect();
         openA = ()-> m.openAlgo();
         play = () -> m.play(settings.getSamplesPerSecond());
         pause = () -> m.pause();
         stop = () -> m.stop();
+        multiply1 =() -> m.multiply1(settings.getSamplesPerSecond());
+        multiply2 =() -> m.multiply2(settings.getSamplesPerSecond());
 
     }
-
+    
+    private String mapToString(Map<String, Float> map)
+    {
+    	String toReturn = "";
+    	for(String s : map.keySet())
+    		toReturn += map.get(s).toString();
+    	return toReturn;
+    }
+    
     public DoubleProperty getProperty(String name) {
         return displayVariables.get(name);
     }
@@ -122,7 +142,7 @@ public class ViewModel extends Observable implements Observer {
     public void selectFeature(String featureName)
     {
         selectedFeature.set(featureName);
-        selectedCorrelatedFeature.set(StatLib.getMostCorrelatedFeatures(m.getTrainTimeSeries(), featureName).feature2);
+        selectedCorrelatedFeature.set(StatLib.getMostCorrelatedFeatures(m.getTimeSeries(), featureName).feature2);
     }
 
     public StringProperty getSelectedFeatureProperty() {

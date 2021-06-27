@@ -24,7 +24,7 @@ public class Controller implements Observer {
     MenuBar menuBar;
     @FXML Clocks clocks;
 
-    private Runnable onOpenL, onOpenD, onOpenA;
+    private Runnable onOpenD, onOpenA;
 
     ViewModel vm;
 
@@ -39,8 +39,9 @@ public class Controller implements Observer {
         player.controller.onPlay = vm.play;
         player.controller.onPause = vm.pause;
         player.controller.onStop = vm.stop;
+        player.controller.onMultiply1=vm.multiply1;
+        player.controller.onMultiply2=vm.multiply2;
 
-        onOpenL = vm.openL;
         onOpenD = vm.openD;
         onOpenA = vm.openA;
 
@@ -49,6 +50,7 @@ public class Controller implements Observer {
         list.controller.setViewModel(vm);
         graph.controller.setViewModel(vm);
         clocks.controller.setViewModel(vm);
+        player.controller.setViewModel(vm);
 
         vm.addObserver(list.controller);
         vm.addObserver(joystick.controller);
@@ -58,7 +60,7 @@ public class Controller implements Observer {
         airspeed.setLayoutX(250);
 
         player.setLayoutX(100);
-        player.setLayoutY(700);
+        player.setLayoutY(600);
 
         joystick.setLayoutX(1100);
         joystick.setLayoutY(80);
@@ -67,19 +69,12 @@ public class Controller implements Observer {
         list.setLayoutY(70);
 
         graph.setLayoutX(300);
-        graph.setLayoutY(100);
+        graph.setLayoutY(30);
 
         clocks.setLayoutX(1100);
         clocks.setLayoutY(400);
 
-
     }
-
-        public void openFile1() {
-          if (onOpenL != null)
-              onOpenL.run();
-        }
-
 
 
         public void openFile2() {

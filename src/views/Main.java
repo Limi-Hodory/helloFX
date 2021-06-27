@@ -16,15 +16,15 @@ public class Main extends Application
         try {
             FXMLLoader fxl = new FXMLLoader(); // Create a FXML object
             AnchorPane root = fxl.load(getClass().getResource("MainView.fxml").openStream()); //We use "Open stream" so we can access the controller later
-            UserSettings settings = UserSettings.decodeXML("conf.xml");
+            //UserSettings settings = UserSettings.decodeXML("conf.xml");
             Controller mc = fxl.getController();
-            ViewModel vm = new ViewModel(settings);
+            ViewModel vm = new ViewModel();
 
             vm.addObserver(mc);
             mc.init(vm);
 
             primaryStage.setTitle("Hello World");
-            primaryStage.setScene(new Scene(root, 1500, 800));
+            primaryStage.setScene(new Scene(root, 1350, 680));
             primaryStage.show();
         } catch(Exception e) {
             e.printStackTrace();

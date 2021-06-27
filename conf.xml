@@ -82,8 +82,13 @@
             <int>10</int>
         </void>
 
+
+    <void property="validFlightFilePath">
+         <string>C:\Users\limor\IdeaProjects\helloFX\reg_flight.csv</string>
+    </void>
+
         <void property="anomalyDetectionAlgoFilePath">
-            <string>C:\Users\limor\IdeaProjects\helloFX\plugins</string>
+            <string>C:\Users\limor\IdeaProjects\helloFX\plugins\</string>
         </void>
 
     </object>

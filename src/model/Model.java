@@ -8,6 +8,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import settings.UserSettings;
 import viewModel.ViewModel;
@@ -24,23 +26,19 @@ public class Model extends Observable
 {
     private Timer timer = null;
     private IntegerProperty timestep;
-    private TimeSeries trainTimeSeries;
+    private TimeSeries timeSeries;
     private TimeSeriesAnomalyDetector detector;
-
+    
     private ObservableList<String> colsNames;
-    //private ListProperty<String> colsNames;
-    private File chosen;
 
     private UserSettings settings;
 
     public Model(IntegerProperty timestep, UserSettings settings)
     {
         this.settings = settings;
-
     	this.timestep = new SimpleIntegerProperty();
         timestep.bind(this.timestep);
-       // ts = new TimeSeries("reg_flight.csv");
-        trainTimeSeries = new TimeSeries();
+        timeSeries = new TimeSeries();
         colsNames = new SimpleListProperty<String>();
     }
 
@@ -57,16 +55,16 @@ public class Model extends Observable
                 @Override
                 public void run() 
                 {
-                    if (timestep.get() < trainTimeSeries.getTimeSteps())
+                    if (timestep.get() < timeSeries.getTimeSteps())
                         timestep.set(timestep.get() + 1);
                 }
             }, 0, 1000 / samplesPerSecond);
         }
     }
 
-    public TimeSeries getTrainTimeSeries() 
+    public TimeSeries getTimeSeries() 
     {
-        return trainTimeSeries;
+        return timeSeries;
     }
 
     public void pause() 
@@ -85,36 +83,40 @@ public class Model extends Observable
         timestep.set(0);
     }
 
-     public void openLearn()
-     {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("open file");
-        fc.setInitialDirectory(new File(".")); //Path to the file
-        fc.setSelectedExtensionFilter((new FileChooser.ExtensionFilter("csv file", "csv")));
-        chosen = fc.showOpenDialog(null); //Give back a file: if its null-not found
-        if (chosen != null) {
-            // here we choose what to do with the file
-            trainTimeSeries = new TimeSeries(chosen.getName());
+    public void multiply1(int samplesPerSecond){
 
-            // ViewList
-            colsNames = FXCollections.observableArrayList(trainTimeSeries.getFeatures());
-            setChanged();
-            notifyObservers();
-        }
+        timer.cancel();
+        timer=null;
+        play(samplesPerSecond*2);
     }
+
+    public void multiply2(int samplesPerSecond){
+
+        timer.cancel();
+        timer=null;
+        play(samplesPerSecond*3);
+    }
+    
     public void openDetect()
     {
+    	if(detector == null)
+    	{
+    		Alert a = new Alert(AlertType.WARNING);
+    		a.setContentText("There is no loaded algorithm.");
+    		a.show();
+    		return;
+    	}
         FileChooser fc = new FileChooser();
         fc.setTitle("open file");
         fc.setInitialDirectory(new File(".")); //Path to the file
         fc.setSelectedExtensionFilter((new FileChooser.ExtensionFilter("csv file", "csv")));
-        chosen = fc.showOpenDialog(null); //Give back a file: if its null-not found
+        File chosen = fc.showOpenDialog(null); //Give back a file: if its null-not found
         if (chosen != null) {
             // here we choose what to do with the file
-            trainTimeSeries = new TimeSeries(chosen.getName());
-
+            timeSeries = new TimeSeries(chosen.getName());
+            
             // ViewList
-            colsNames = FXCollections.observableArrayList(trainTimeSeries.getFeatures());
+            colsNames = FXCollections.observableArrayList(timeSeries.getFeatures());
             setChanged();
             notifyObservers();
         }
@@ -126,38 +128,37 @@ public class Model extends Observable
         fc.setTitle("open file");
         fc.setInitialDirectory(new File(settings.getAnomalyDetectionAlgoFilePath())); //Path to the f
         fc.setSelectedExtensionFilter((new FileChooser.ExtensionFilter("class file", "class")));
-        chosen = fc.showOpenDialog(null); //Give back a file: if its null-not found
+        File chosen = fc.showOpenDialog(null); //Give back a file: if its null-not found
         if (chosen != null)
         {
+        	String className = constructClassName(chosen.getPath());
             try {
-
                 URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new URL("file://" + settings.getAnomalyDetectionAlgoFilePath())});
-                String className = chosen.getPath().substring(settings.getAnomalyDetectionAlgoFilePath().length(), chosen.getPath().length()); //to get the specific path (for ex: \linreg\LinearRegressionAnomalyDetector.class)
-                System.out.println(className);
-            /*
-            String className = "hybridAlg.HybridAlgorithmAnomalyDetector";
-            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] {new URL("file://"+path)});
-            Class<?> c = classLoader.loadClass(className);
-            TimeSeriesAnomalyDetector detector = (TimeSeriesAnomalyDetector) c.newInstance();
-
-            TimeSeries ts = new TimeSeries("reg_flight.csv");
-            detector.learnNormal(ts);
-
-            List<AnomalyReport> reports = detector.detect(new TimeSeries("anomaly_flight.csv"));
-
-            System.out.println("Number of reports: " + reports.size());
-            for(AnomalyReport ar : reports)
-                System.out.println(ar);
-
-
-             */
-            } catch (Exception e) {}
+                Class<?> c = classLoader.loadClass(className);
+                detector = (TimeSeriesAnomalyDetector) c.newInstance();
+            } catch (Exception e) {
+            	e.printStackTrace();
+            	System.out.println("Error occured trying to open the algorithm. \n"
+            			+ "Try checking the conf.xml file for the right plugins path. \n"
+            			+ "Class Name: " + className);
+            }
+            if(detector != null)
+            {
+            	detector.learnNormal(new TimeSeries(settings.getValidFlightFilePath()));
+            	System.out.println("trained!");
+            }
         }
     }
-
+    
+    private String constructClassName(String path)
+    {
+    	String className = path.substring(settings.getAnomalyDetectionAlgoFilePath().length(), path.length());
+    	return className.replace(".class", "").replace("\\", ".");
+    }
+    
     public float[] getTimeSeriesColUntil(String col, int timestep)
     {
-        return Arrays.copyOf(trainTimeSeries.valuesOf(col), timestep);
+        return Arrays.copyOf(timeSeries.valuesOf(col), timestep);
     }
 
     public ObservableList<String> getColsNames()
