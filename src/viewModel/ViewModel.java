@@ -1,5 +1,7 @@
 package viewModel;
 
+import anomalyDetection.PaintData;
+import anomalyDetection.Point;
 import anomalyDetection.StatLib;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -11,10 +13,7 @@ import model.FlightConnector;
 import model.Model;
 import settings.UserSettings;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class ViewModel extends Observable implements Observer {
     //timeStep: tell us in witch line of the timeSeries we are in.
@@ -142,9 +141,26 @@ public class ViewModel extends Observable implements Observer {
     public void selectFeature(String featureName)
     {
         selectedFeature.set(featureName);
-        selectedCorrelatedFeature.set(StatLib.getMostCorrelatedFeatures(m.getTimeSeries(), featureName).feature2);
+        selectedCorrelatedFeature.set(m.mostCorFeature(featureName));
     }
 
+    public List<PaintData> paintAlgo(String f1)
+    {
+        return m.paintAlgo(f1);
+    }
+    /*
+    public List<Point> paintResults(String f1, String f2)
+    {
+        return m.paintResults(f1, f2);
+    }
+
+    public List<Point> paintLearn(String f1, String f2)
+    {
+        return m.paintLearn(f1,f2);
+    }
+
+
+     */
     public StringProperty getSelectedFeatureProperty() {
         return selectedFeature;
     }
@@ -167,6 +183,6 @@ public class ViewModel extends Observable implements Observer {
 
     public float[] getTimeSeriesColUntil(String col, int timestep)
     {
-        return m.getTimeSeriesColUntil(col, timestep);
+        return m.getDetectTimeSeriesColUntil(col, timestep);
     }
 }

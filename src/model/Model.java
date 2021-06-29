@@ -1,9 +1,7 @@
 package model;
 
-import anomalyDetection.TimeSeriesAnomalyDetector;
+import anomalyDetection.*;
 import javafx.beans.property.IntegerProperty;
-import anomalyDetection.TimeSeries;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -12,23 +10,22 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import settings.UserSettings;
-import viewModel.ViewModel;
 
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.Observable;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Model extends Observable
 {
     private Timer timer = null;
     private IntegerProperty timestep;
-    private TimeSeries timeSeries;
+    private TimeSeries detectTimeSeries;
+    private TimeSeries learnTimeSeries;
     private TimeSeriesAnomalyDetector detector;
-    
+    private List<AnomalyReport> detectionRes;
+    private List<CorrelatedFeatures> correlatedFeatures;
+
     private ObservableList<String> colsNames;
 
     private UserSettings settings;
@@ -38,7 +35,7 @@ public class Model extends Observable
         this.settings = settings;
     	this.timestep = new SimpleIntegerProperty();
         timestep.bind(this.timestep);
-        timeSeries = new TimeSeries();
+        detectTimeSeries = new TimeSeries();
         colsNames = new SimpleListProperty<String>();
     }
 
@@ -55,7 +52,7 @@ public class Model extends Observable
                 @Override
                 public void run() 
                 {
-                    if (timestep.get() < timeSeries.getTimeSteps())
+                    if (timestep.get() < detectTimeSeries.getTimeSteps())
                         timestep.set(timestep.get() + 1);
                 }
             }, 0, 1000 / samplesPerSecond);
@@ -64,7 +61,7 @@ public class Model extends Observable
 
     public TimeSeries getTimeSeries() 
     {
-        return timeSeries;
+        return detectTimeSeries;
     }
 
     public void pause() 
@@ -113,12 +110,14 @@ public class Model extends Observable
         File chosen = fc.showOpenDialog(null); //Give back a file: if its null-not found
         if (chosen != null) {
             // here we choose what to do with the file
-            timeSeries = new TimeSeries(chosen.getName());
-            
+            detectTimeSeries = new TimeSeries(chosen.getName());
+            detectionRes = detector.detect(detectTimeSeries);
             // ViewList
-            colsNames = FXCollections.observableArrayList(timeSeries.getFeatures());
+            colsNames = FXCollections.observableArrayList(detectTimeSeries.getFeatures());
             setChanged();
             notifyObservers();
+            for(AnomalyReport ar : detectionRes)
+                System.out.println(ar.description);
         }
     }
 
@@ -144,7 +143,9 @@ public class Model extends Observable
             }
             if(detector != null)
             {
-            	detector.learnNormal(new TimeSeries(settings.getValidFlightFilePath()));
+                learnTimeSeries = new TimeSeries(settings.getValidFlightFilePath());
+                correlatedFeatures = StatLib.getMostCorrelatedFeatures(learnTimeSeries);
+            	detector.learnNormal(learnTimeSeries);
             	System.out.println("trained!");
             }
         }
@@ -156,13 +157,71 @@ public class Model extends Observable
     	return className.replace(".class", "").replace("\\", ".");
     }
     
-    public float[] getTimeSeriesColUntil(String col, int timestep)
+    public float[] getDetectTimeSeriesColUntil(String col, int timestep)
     {
-        return Arrays.copyOf(timeSeries.valuesOf(col), timestep);
+        if(detectTimeSeries != null)
+            return Arrays.copyOf(detectTimeSeries.valuesOf(col), timestep);
+        return new float[0];
     }
+/*
+    public List<Point> paintLearn(String f1, String f2)
+    {
+        List<Point> toReturn = new ArrayList<Point>();
+        if(detector.isSingleColumn())
+        {
+            float[] arr = learnTimeSeries.valuesOf(f1);
+            for(int i = 0; i < arr.length; i++)
+                toReturn.add(new Point(i, arr[i]));
+        }
+        else
+        {
+            float[] arr1 = learnTimeSeries.valuesOf(f1);
+            float[] arr2 = learnTimeSeries.valuesOf(f2);
+            for(int i = 0; i< arr1.length; i++)
+                toReturn.add(new Point(arr1[i], arr2[i]));
+        }
 
+        return toReturn;
+    }
+*/
     public ObservableList<String> getColsNames()
     {
         return colsNames;
+    }
+
+    public List<PaintData> paintAlgo(String f1)
+    {
+        if(detector != null)
+            return detector.paint(f1);
+        return new ArrayList<PaintData>();
+    }
+/*
+    public List<Point> paintResults(String f1, String f2)
+    {
+        List<Point> toReturn = new ArrayList<Point>();
+        String description = f1;
+        if(!detector.isSingleColumn())
+            description += "," + f2;
+        System.out.println(description);
+        for(AnomalyReport ar : detectionRes)
+        {
+            if(ar.description.equals(description))
+            {
+                Map<String, Float> row = detectTimeSeries.row((int)ar.timeStep);
+                if(detector.isSingleColumn())
+                    toReturn.add(new Point((int)ar.timeStep, row.get(f1)));
+                else
+                    toReturn.add(new Point(row.get(f1), row.get(f2)));
+            }
+        }
+        return toReturn;
+    }
+*/
+    public String mostCorFeature(String f)
+    {
+        for(CorrelatedFeatures cf : correlatedFeatures)
+            if(cf.feature1.equals(f))
+                return cf.feature2;
+        return "";
     }
 }

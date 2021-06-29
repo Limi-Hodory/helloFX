@@ -4,6 +4,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import anomalyDetection.CorrelatedFeatures;
+import anomalyDetection.PaintData;
+import anomalyDetection.Point;
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -12,6 +14,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
@@ -24,6 +27,8 @@ public class GraphController implements Observer
 	LineChart<Number, Number> featureGraph;
 	@FXML
 	LineChart<Number, Number> correlatedFeatureGraph;
+	@FXML
+	LineChart<Number, Number> algoGraph;
 
 	private ViewModel vm;
 
@@ -32,8 +37,10 @@ public class GraphController implements Observer
 
 	private StringProperty selectedFeature;
 	private StringProperty correlatedFeature;
+
 	private FloatProperty selectedFeatureValue;
 	private FloatProperty correlatedFeatureValue;
+
 	private IntegerProperty timestep;
 
 	public void setViewModel(ViewModel vm)
@@ -59,9 +66,11 @@ public class GraphController implements Observer
 		correlatedFeatureSeries = new Series<Number, Number>();
 		correlatedFeatureGraph.getData().add(correlatedFeatureSeries);
 
+
 		selectedFeature.addListener((observableValue, oldV, newV) ->
 			{
 				Platform.runLater(() -> changeFeatureGraph(featureGraph, featureGraphSeries, newV));
+				Platform.runLater(this::changeAlgoGraph);
 			});
 
 		correlatedFeature.addListener((ObservableValue, oldV, newV) ->
@@ -96,6 +105,34 @@ public class GraphController implements Observer
 			series.getData().add(data);
 		}
 		graph.getYAxis().setLabel(changeTo);
+	}
+
+	private void changeAlgoGraph()
+	{
+		 java.util.List<PaintData> paints = vm.paintAlgo(selectedFeature.get());
+		 algoGraph.getData().clear();
+		 int i = 0;
+		 for(PaintData pd : paints)
+		 {
+		 	Series<Number, Number> series = new Series<Number, Number>();
+		 	for(Point p : pd.points)
+				series.getData().add(new XYChart.Data<Number, Number>(p.x,p.y));
+		 	algoGraph.getData().add(series);
+		 	Node line = series.getNode().lookup(".default-color" + i + ".chart-series-line");
+		 	if(line != null)
+		 	{
+		 		if(!pd.isLine)
+					line.setStyle("-fx-stroke: transparent;");
+		 		else
+		 			line.setStyle("-fx-stroke: " + pd.color + ";");
+			}
+		 	Node fill = series.getNode().lookup(".default-color" + i + ".chart-legend-item-symbol");
+		 	if(fill != null) {
+				fill.setStyle("-fx-background-color: " + pd.color + ", " + pd.color + ";");
+				System.out.println(pd.color);
+		 	}
+		 	i++;
+		 }
 	}
 
 	@Override

@@ -9,13 +9,13 @@
    <children>
       <LineChart fx:id="correlatedFeatureGraph" title="Correlated Feature" animated="false" layoutX="435.0" layoutY="36.0" prefHeight="278.0" prefWidth="312.0">
         <xAxis>
-          <NumberAxis label="Time" side="BOTTOM" autoRanging="false" />
+          <NumberAxis label="Time" side="BOTTOM" autoRanging="true" />
         </xAxis>
         <yAxis>
-          <NumberAxis label="Feature" side="LEFT" autoRanging="false" upperBound="1000" lowerBound="-100" />
+          <NumberAxis label="Feature" side="LEFT" autoRanging="true" />
         </yAxis>
       </LineChart>
-      <LineChart layoutX="136.0" layoutY="363.0" prefHeight="272.0" prefWidth="394.0">
+      <LineChart fx:id="algoGraph" title="Algorithm Graph" animated="false" layoutX="136.0" layoutY="363.0" prefHeight="272.0" prefWidth="394.0">
         <xAxis>
           <NumberAxis side="BOTTOM" />
         </xAxis>
@@ -25,10 +25,10 @@
       </LineChart>
       <LineChart fx:id="featureGraph" title="Feature" layoutX="37.0" layoutY="36.0" prefHeight="292.0" prefWidth="318.0" animated="false">
         <xAxis>
-          <NumberAxis label="Time" side="BOTTOM" autoRanging="false" />
+          <NumberAxis label="Time" side="BOTTOM" autoRanging="true" />
         </xAxis>
         <yAxis>
-          <NumberAxis label="Feature" side="LEFT" autoRanging="false" upperBound="1000" lowerBound="-100" />
+          <NumberAxis label="Feature" side="LEFT" autoRanging="true"  />
         </yAxis>
       </LineChart>
    </children>

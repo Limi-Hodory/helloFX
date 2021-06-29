@@ -32,8 +32,6 @@ public class Controller implements Observer {
     }
 
     public void init(ViewModel vm) {
-        alt.textProperty().bind(vm.getProperty(vm.getSettings().getAltitudeField().getFeatureName()).asString()); //Wrap (connect) between alt in view to alt in view model
-        //DODO bind to the all properties לעשות ככה לכל התכונות
 
         // player.controller.onOpen= vm.open;
         player.controller.onPlay = vm.play;
@@ -56,45 +54,43 @@ public class Controller implements Observer {
         vm.addObserver(joystick.controller);
 
         //Just make order
-        alt.setLayoutX(200);
-        airspeed.setLayoutX(250);
 
-        player.setLayoutX(100);
+        player.setLayoutX(15);
         player.setLayoutY(600);
 
-        joystick.setLayoutX(1100);
+        joystick.setLayoutX(960);
         joystick.setLayoutY(80);
 
         list.setLayoutX(50);
         list.setLayoutY(70);
 
-        graph.setLayoutX(300);
-        graph.setLayoutY(30);
+        graph.setLayoutX(230);
+        graph.setLayoutY(5);
 
-        clocks.setLayoutX(1100);
+        clocks.setLayoutX(900);
         clocks.setLayoutY(400);
 
     }
 
 
-        public void openFile2() {
-                if (onOpenD != null)
-                    onOpenD.run();
-            }
+    public void openFile2() {
+        if (onOpenD != null)
+            onOpenD.run();
+    }
 
-       public void openFile3() {
-            if (onOpenA != null)
-                onOpenA.run();
-        }
+    public void openFile3() {
+        if (onOpenA != null)
+            onOpenA.run();
+    }
 
 
 
 
     @Override
     public void update(Observable o, Object arg) {
-      //  if(o==vm){
+        //  if(o==vm){
         //    this.onOpen= vm.open;
-            //this.openFile();}
+        //this.openFile();}
 
         //}
 

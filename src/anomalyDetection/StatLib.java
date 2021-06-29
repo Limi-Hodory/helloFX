@@ -1,6 +1,8 @@
 package anomalyDetection;
 
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatLib {
 	
@@ -44,25 +46,26 @@ public class StatLib {
 		return (float)(cov(x, y) / (Math.sqrt(var(x))*Math.sqrt(var(y))));
 	}
 
-	public static CorrelatedFeatures getMostCorrelatedFeatures(TimeSeries ts, String feature)
+	public static List<CorrelatedFeatures> getMostCorrelatedFeatures(TimeSeries ts)
 	{
+		List<CorrelatedFeatures> cf = new ArrayList<CorrelatedFeatures>();
+
 		String[] f = ts.getFeatures();
-		float maxCorrelation = 0;
-		String maxFeature = f[0];
-		for(int i = 0; i < f.length; i++)
-		{
-			if(!feature.equals(f[i]))
-			{
-				float correlation = StatLib.pearson(ts.valuesOf(feature), ts.valuesOf(f[i]));
-				if(Math.abs(correlation) > Math.abs(maxCorrelation))
-				{
+		for(int i = 0; i < f.length; i++) {
+			float maxCorrelation = 0;
+			String maxFeature = f[i];
+			for(int j = i + 1; j < f.length; j++) {
+				float correlation = StatLib.pearson(ts.valuesOf(f[i]), ts.valuesOf(f[j]));
+				if(Math.abs(correlation) > Math.abs(maxCorrelation)) {
 					maxCorrelation = correlation;
-					maxFeature = f[i];
+					maxFeature = f[j];
 				}
 			}
+
+			cf.add(new CorrelatedFeatures(f[i], maxFeature, maxCorrelation));
 		}
 
-		return new CorrelatedFeatures(feature, maxFeature, maxCorrelation);
+		return cf;
 	}
 
 	// performs a linear regression and returns the line equation

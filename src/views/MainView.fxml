@@ -27,21 +27,9 @@
                         <MenuItem mnemonicParsing="false" fx:id="algo" onAction="#openFile3" text="Open Algorithm" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
 
-     <Label text="alt" fx:id="alt" />
-     <Label text="airspeed" fx:id="airspeed" />
       <Graph fx:id="graph"> </Graph>
       <List fx:id="list"> </List>
       <Joystick fx:id="joystick"> </Joystick>

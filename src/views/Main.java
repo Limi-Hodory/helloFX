@@ -24,7 +24,7 @@ public class Main extends Application
             mc.init(vm);
 
             primaryStage.setTitle("Hello World");
-            primaryStage.setScene(new Scene(root, 1350, 680));
+            primaryStage.setScene(new Scene(root, 1360, 700));
             primaryStage.show();
         } catch(Exception e) {
             e.printStackTrace();

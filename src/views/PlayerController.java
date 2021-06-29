@@ -3,12 +3,9 @@ package views;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import viewModel.ViewModel;
 import java.time.LocalTime;
 import java.util.Observable;
@@ -24,6 +21,9 @@ public class PlayerController implements Observer {
     public Runnable onOpen, onPlay, onPause, onStop ,onMultiply1, onMultiply2 ,onRewind1 ,onRewind2 ;
     @FXML
     Label timer;
+    @FXML
+    Slider slider;
+
     IntegerProperty timestep;
     private ViewModel vm;
 
@@ -80,6 +80,11 @@ public class PlayerController implements Observer {
         timestep.addListener((observable, oldV, newV) -> {
             Platform.runLater(() -> change());
         });
+
+        //sliderY.valueProperty().bind(vm.displayVariables.get(vm.getSettings().getThrottleField().getFeatureName()));
+        slider.valueProperty().bind(vm.getTimestepProperty());
+        slider.setMax(2300);
+        slider.setMin(0);
 
     }
 

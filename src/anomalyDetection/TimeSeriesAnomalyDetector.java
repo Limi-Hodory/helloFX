@@ -6,5 +6,5 @@ public interface TimeSeriesAnomalyDetector
 {
 	void learnNormal(TimeSeries ts);
 	List<AnomalyReport> detect(TimeSeries ts);
-	List<Point> paint();
+	List<PaintData> paint(String col);
 }

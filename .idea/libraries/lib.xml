@@ -1,14 +1,18 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
+      <root url="file://$USER_HOME$/Downloads/openjfx-16_windows-x64_bin-sdk/javafx-sdk-16/lib" />
+      <root url="jar://$PROJECT_DIR$/Medusa-8.0.jar!/" />
       <root url="file://$USER_HOME$/AppData/Local/javafx-sdk-16/lib" />
-      <root url="jar://$USER_HOME$/Downloads/Medusa-8.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="file://$USER_HOME$/Downloads/openjfx-16_windows-x64_bin-sdk/javafx-sdk-16/lib" />
       <root url="file://$USER_HOME$/AppData/Local/javafx-sdk-16/lib" />
     </SOURCES>
     <jarDirectory url="file://$USER_HOME$/AppData/Local/javafx-sdk-16/lib" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/openjfx-16_windows-x64_bin-sdk/javafx-sdk-16/lib" recursive="false" />
     <jarDirectory url="file://$USER_HOME$/AppData/Local/javafx-sdk-16/lib" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/openjfx-16_windows-x64_bin-sdk/javafx-sdk-16/lib" recursive="false" type="SOURCES" />
   </library>
 </component>
