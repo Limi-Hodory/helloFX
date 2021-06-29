@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import eu.hansolo.medusa.Gauge?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="284.0" prefWidth="395.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.ClocksController">
+    <children>
+      <Gauge fx:id="altimeterClock" layoutY="8.0" maxValue="700.0" prefHeight="115.0" prefWidth="128.0" />
+      <Gauge fx:id="airSpeedClock" layoutX="128.0" layoutY="10.0" prefHeight="115.0" prefWidth="128.0" />
+      <Gauge fx:id="pitchClock" layoutY="153.0" maxValue="20.0" prefHeight="115.0" prefWidth="128.0" />
+      <Gauge fx:id="rollClock" layoutX="128.0" layoutY="157.0" maxValue="40.0" prefHeight="115.0" prefWidth="128.0" />
+      <Gauge fx:id="directionClock" layoutX="258.0" layoutY="12.0" maxValue="400.0" prefHeight="115.0" prefWidth="128.0" />
+      <Gauge fx:id="yawClock" layoutX="264.0" layoutY="159.0" prefHeight="115.0" prefWidth="128.0" />
+      <Text layoutX="33.0" layoutY="133.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Altimeter" wrappingWidth="62.07745361328125" />
+      <Text layoutX="170.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AirSpeed" wrappingWidth="62.07745361328125" />
+      <Text layoutX="294.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Direction" wrappingWidth="62.07745361328125" />
+      <Text layoutX="51.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pitch" />
+      <Text layoutX="179.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Roll" />
+      <Text layoutX="317.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Yaw" />
+    </children>
+</Pane>

@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact name="HelloFX:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/HelloFX_jar</output-path>
+    <root id="root">
+      <element id="archive" name="HelloFX.jar">
+        <element id="module-output" name="HelloFX" />
+      </element>
+      <element id="library" level="project" name="lib" />
+      <element id="library" level="module" name="javafx-fxml" module-name="HelloFX" />
+    </root>
+  </artifact>
+</component>
