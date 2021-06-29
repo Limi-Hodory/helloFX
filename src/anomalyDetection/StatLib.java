@@ -1,6 +1,8 @@
 package anomalyDetection;
 
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatLib {
 	
@@ -42,6 +44,28 @@ public class StatLib {
 	// returns the Pearson correlation coefficient of X and Y
 	public static float pearson(float[] x, float[] y) {
 		return (float)(cov(x, y) / (Math.sqrt(var(x))*Math.sqrt(var(y))));
+	}
+
+	public static List<CorrelatedFeatures> getMostCorrelatedFeatures(TimeSeries ts)
+	{
+		List<CorrelatedFeatures> cf = new ArrayList<CorrelatedFeatures>();
+
+		String[] f = ts.getFeatures();
+		for(int i = 0; i < f.length; i++) {
+			float maxCorrelation = 0;
+			String maxFeature = f[i];
+			for(int j = i + 1; j < f.length; j++) {
+				float correlation = StatLib.pearson(ts.valuesOf(f[i]), ts.valuesOf(f[j]));
+				if(Math.abs(correlation) > Math.abs(maxCorrelation)) {
+					maxCorrelation = correlation;
+					maxFeature = f[j];
+				}
+			}
+
+			cf.add(new CorrelatedFeatures(f[i], maxFeature, maxCorrelation));
+		}
+
+		return cf;
 	}
 
 	// performs a linear regression and returns the line equation

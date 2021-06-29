@@ -5,11 +5,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class TimeSeries {
+public class TimeSeries 
+{
+	
     private LinkedHashMap<String, Integer> features;
     private List<List<Float>> values;
-    //for flight gear
-    private final HashMap<Integer, String> mRows = new HashMap();
     private long timeSteps;
 
     public TimeSeries(String csvFileName) {
@@ -63,12 +63,9 @@ public class TimeSeries {
         }
     }
 
-    //change for flight gear
     public void addRow(int currentRow, String row) {
         String[] valsStr = row.split(",");
         float[] vals = new float[valsStr.length];
-        //put into arr
-        mRows.put(currentRow, row);
         for (int i = 0; i < vals.length; i++)
             vals[i] = Float.parseFloat(valsStr[i]);
         addRow(vals);
@@ -80,11 +77,6 @@ public class TimeSeries {
         for (int i = 0; i < rowVals.length; i++)
             values.get(i).add(rowVals[i]);
         timeSteps++;
-    }
-
-    //return row
-    public String getRow(int number){
-        return mRows.get(number);
     }
 
     public String[] getFeatures() {

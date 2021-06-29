@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class UserSettings 
 {	
+	public final static String configuration = "conf.xml";
 	private static String lastConfiguration = "lastConf.xml";
-	
 	//private SettingsField latitudeField = new SettingsField();
 	//private SettingsField longitudeField = new SettingsField();
 	private SettingsField altitudeField = new SettingsField();
@@ -126,16 +126,6 @@ public class UserSettings
 		this.joystickYField = joystickYField;
 	}
 	
-	/*
-	public SettingsField getAileronField() {
-		return aileronField;
-	}
-
-	public void setAileronField(SettingsField aileronField) {
-		this.aileronField = aileronField;
-	}
-	*/
-	
 	public int getSamplesPerSecond() {
 		return samplesPerSecond;
 	}
@@ -180,27 +170,25 @@ public class UserSettings
 		}
 	}
 	
-	static public UserSettings decodeXML(String fileName) {
+	static public UserSettings decodeXML() throws Exception
+	{
 		UserSettings settings = new UserSettings();
-		try {
-			FileInputStream fis = new FileInputStream(fileName);
+		try 
+		{
+			FileInputStream fis = new FileInputStream(configuration);
+			XMLDecoder decoder = new XMLDecoder(fis);
+			settings = (UserSettings)decoder.readObject();
+			decoder.close();
+			fis.close();
+		} catch(Exception e)
+		{
+			FileInputStream fis = new FileInputStream(lastConfiguration);
 			XMLDecoder decoder = new XMLDecoder(fis);
 			settings = (UserSettings)decoder.readObject();
 			decoder.close();
 			fis.close();
 		}
-		//TODO: Handle exceptions in GUI.
-		catch(FileNotFoundException e) {
-			
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-		}
 		
 		return settings;
-	}
-	
-	static public UserSettings decodeXML() {
-		return decodeXML(lastConfiguration);
 	}
 }
